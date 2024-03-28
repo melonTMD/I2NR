@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image to Numeric Representation</title>
+    <style>
+        .container {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            padding: 10px;
+        }
+
+        .input-container,
+        .output-container {
+            flex: 1;
+            padding: 10px;
+        }
+
+        .imageOutput {
+            max-width: 100%;
+            max-height: 200px;
+            display: block;
+            margin-top: 10px;
+            border: 1px solid #CCCCCC;
+        }
+
+        .outputContainer {
+            max-width: 100%;
+            max-height: 200px;
+            display: block;
+            margin-top: 10px;
+            border: 1px solid #CCCCCC;
+        }
+
+        .result-container {
+            border: 1px solid #ccc;
+            padding: 10px;
+            max-height: 200px;
+            max-width: 400px; /* 设置最大宽度为400px */
+            overflow-y: auto;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="input-container">
+            <h2>选择图片</h2>
+            <input type="file" id="imageInput">
+            <div class="button-container">
+                <button id="convertButton">转换</button>
+                <button id="copyButton" style="display: none;">复制</button>
+            </div>
+            <div class="result-container" id="inputResultContainer"></div>
+        </div>
+        <div class="output-container">
+            <h2>图片视图</h2>
+            <img id="imageOutput" style="display: block;">
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="input-container">
+            <h2>反编译</h2>
+            <input type="text" id="numericInput" placeholder="输入内容">
+            <div class="button-container">
+                <button id="decompileManualButton">反编译</button>
+            </div>
+        </div>
+        <div class="output-container">
+            <h2>输出</h2>
+            <div id="outputContainer" style="display: block;"></div>
+        </div>
+    </div>
+
+    <script>
+        // 图像转换为数字表示的函数
+        function imageToNumericRepresentation(imageUrl) {
+            const img = new Image();
+            img.crossOrigin = 'Anonymous';
+
+            return new Promise((resolve, reject) => {
+                img.onload = function() {
+                    const canvas = document.createElement('canvas');
+                    const ctx = canvas.getContext('2d');
+                    canvas.width = img.width;
+                    canvas.height = img.height;
+                    ctx.drawImage(img, 0, 0);
+                    const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height).data;
+
+                    let numericRepresentation = '';
+
+                    // 添加图像高度信息
+                    const height = canvas.height.toString();
+                    const heightLength = height.length.toString();
+                    numericRepresentation += heightLength + height;
+
+                    // 添加图像宽度信息
+                    const width = canvas.width.toString();
+                    const widthLength = width.length.toString();
+                    numericRepresentation += widthLength + width;
+
+                    // 添加每个像素点的颜色信息
+                    for (let i = 0; i < imageData.length; i += 4) {
+                        const r = imageData[i];
+                        const g = imageData[i + 1];
+                        const b = imageData[i + 2];
+
+                        const rStr = r.toString();
+                        const gStr = g.toString();
+                        const bStr = b.toString();
+
+                        const rLength = rStr.length.toString();
+                        const gLength = gStr.length.toString();
+                        const bLength = bStr.length.toString();
+
+                        numericRepresentation += rLength + rStr + gLength + gStr + bLength + bStr;
+                    }
+
+                    resolve(numericRepresentation);
+                };
+
+                img.src = imageUrl;
+            });
+        }
+
+        // 数字表示转换为图像的函数
+        function numericRepresentationToImage(numericRepresentation) {
+            let index = 0;
+
+            // 从数字表示中提取图像高度
+            const heightLength = parseInt(numericRepresentation[index]);
+            index++;
+            const height = parseInt(numericRepresentation.substr(index, heightLength));
+            index += heightLength;
+
+            // 从数字表示中提取图像宽度
+            const widthLength = parseInt(numericRepresentation[index]);
+            index++;
+            const width = parseInt(numericRepresentation.substr(index, widthLength));
+            index += widthLength;
+
+            // 创建图像的像素数据
+            const imageData = new Uint8ClampedArray(width * height * 4);
+
+            // 从数字表示中提取每个像素点的颜色信息
+            for (let i = 0; i < width * height * 4; i += 4) {
+                const rLength = parseInt(numericRepresentation[index]);
+                index++;
+                const r = parseInt(numericRepresentation.substr(index, rLength));
+                index += rLength;
+
+                const gLength = parseInt(numericRepresentation[index]);
+                index++;
+                const g = parseInt(numericRepresentation.substr(index, gLength));
+                index += gLength;
+
+                const bLength = parseInt(numericRepresentation[index]);
+                index++;
+                const b = parseInt(numericRepresentation.substr(index, bLength));
+                index += bLength;
+
+                // 设置图像像素数据
+                imageData[i] = r;
+                imageData[i + 1] = g;
+                imageData[i + 2] = b;
+                imageData[i + 3] = 255; // 不透明
+            }
+
+            // 创建图像数据对象
+            const image = new ImageData(imageData, width, height);
+
+            // 创建图像元素并显示
+            const imageElement = document.createElement('img');
+            imageElement.style.display = 'block';
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+            canvas.width = width;
+            canvas.height = height;
+            ctx.putImageData(image, 0, 0);
+            imageElement.src = canvas.toDataURL();
+            document.getElementById('outputContainer').appendChild(imageElement);
+        }
+
+        // 获取输入框和按钮
+        const imageInput = document.getElementById('imageInput');
+        const convertButton = document.getElementById('convertButton');
+        const copyButton = document.getElementById('copyButton');
+        const decompileManualButton = document.getElementById('decompileManualButton');
+
+        // 当选择图像文件时
+        imageInput.addEventListener('change', async function(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const imageUrl = URL.createObjectURL(file);
+                const imageOutput = document.getElementById('imageOutput');
+                imageOutput.src = imageUrl;
+                imageOutput.style.display = 'block';
+                try {
+                    const numericRepresentation = await imageToNumericRepresentation(imageUrl);
+                    document.getElementById('inputResultContainer').textContent = numericRepresentation;
+                    copyButton.style.display = 'inline';
+                } catch (error) {
+                    console.error('An error occurred:', error);
+                }
+            }
+        });
+
+        // 当点击按钮时
+        convertButton.addEventListener('click', async function() {
+            const file = imageInput.files[0];
+            if (file) {
+                const imageUrl = URL.createObjectURL(file);
+                try {
+                    const numericRepresentation = await imageToNumericRepresentation(imageUrl);
+                    document.getElementById('inputResultContainer').textContent = numericRepresentation;
+                    copyButton.style.display = 'inline';
+                } catch (error) {
+                    console.error('An error occurred:', error);
+                }
+            } else {
+                alert('请先选择图像文件！');
+            }
+        });
+
+        // 当点击手动反编译按钮时
+        decompileManualButton.addEventListener('click', function() {
+            const numericRepresentation = document.getElementById('numericInput').value.trim();
+            if (numericRepresentation) {
+                numericRepresentationToImage(numericRepresentation);
+            } else {
+                alert('请输入数字表示！');
+            }
+        });
+    </script>
+</body>
+</html>
