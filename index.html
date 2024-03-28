@@ -53,6 +53,7 @@
             <div class="button-container">
                 <button id="convertButton">转换</button>
                 <button id="copyButton" style="display: none;">复制</button>
+                
             </div>
             <div class="result-container" id="inputResultContainer"></div>
         </div>
@@ -77,6 +78,21 @@
     </div>
 
     <script>
+        document.getElementById('copyButton').addEventListener('click', function() {
+    var resultContainer = document.getElementById('inputResultContainer');
+    var resultText = resultContainer.innerText;
+
+    var tempInput = document.createElement('input');
+    tempInput.value = resultText;
+    document.body.appendChild(tempInput);
+
+    tempInput.select();
+    document.execCommand('copy');
+
+    document.body.removeChild(tempInput);
+    alert('已复制到剪贴板');
+});
+
         // 图像转换为数字表示的函数
         function imageToNumericRepresentation(imageUrl) {
             const img = new Image();
