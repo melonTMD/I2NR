@@ -11,7 +11,7 @@
             justify-content: space-between;
             margin-bottom: 20px;
             border: 1px solid #ccc;
-            background: #f9f9f9;
+            background: #e5e5e5;
             padding: 10px;
         }
 
@@ -45,6 +45,16 @@
             overflow-y: auto;
         }
 
+        .Button {
+            background-color: #efefef; /* 红色背景 */
+            transition: background-color 0.3s ease; /* 添加过渡效果 */
+        }
+
+        /* 鼠标悬停时的样式 */
+        .Button:hover {
+            background-color: #dbdbdb; /* 深红色背景 */
+        }
+
     </style>
 </head>
 <body>
@@ -54,8 +64,8 @@
             <h2>选择图片</h2>
             <input type="file" id="imageInput">
             <div class="button-container">
-                <button id="convertButton">转换</button>
-                <button id="copyButton" style="display: none;">复制</button>
+                <button id="convertButton" class="Button">转换</button>
+                <button id="copyButton" style="display: none;" class="Button">复制</button>
                 
             </div>
             <div class="result-container" id="inputResultContainer"></div>
@@ -71,7 +81,7 @@
             <h2>反编译</h2>
             <textarea id="numericInput" placeholder="输入内容" style="width: 600px; height: 500px; resize: none;"></textarea>
             <div class="button-container">
-                <button id="decompileManualButton">反编译</button>
+                <button id="decompileManualButton" class="Button">反编译</button>
             </div>
         </div>
         <div class="output-container">
