@@ -1,4 +1,4 @@
-![I2NR](https://github.com/melonTMD/I2NR/blob/bd75cb468679f8f2b890e2012b599b16de01ab1e/I2NR.png)
+# ![图像到数字显示](https://github.com/melonTMD/I2NR/blob/bd75cb468679f8f2b890e2012b599b16de01ab1e/I2NR.png)
 
 使用数字来传输你的静态图像！
 ## 信息
