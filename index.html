@@ -62,6 +62,24 @@
         .Button:hover {
             background-color: #dbdbdb; 
         }
+        
+        .VisitOnGitHubButton {
+            background-color: #d90000; /* 初始背景颜色为红色 */
+            border: 1px solid #b70000;
+            color: #ffffff;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            cursor: pointer;
+            height: 25px; /* 设置按钮高度 */
+            transition: background-color 0.3s, border 0.3s ease; /* 添加过渡效果 */
+        }
+
+        /* 鼠标悬停时的按钮样式 */
+        .VisitOnGitHubButton:hover {
+            background-color: #b70000; /* 鼠标悬停时背景颜色为深红色 */
+            border: 1px solid #960000;
+        }
 
     </style>
 </head>
@@ -98,6 +116,14 @@
         </div>
     </div>
 
+        <div class="container">
+            <div class="input-container">
+                <h2>作者：melonTMD</h2>
+                <h2>许可证：MIT</h2>
+                <a href="https://github.com/melonTMD/I2NR" button id="VisitOnGitHub" class="VisitOnGitHubButton"><img src="github-mark.svg" alt="" style="width: 20px; height: 20px;">在 Github 上访问</button>
+            </div>
+        </div>
+    
     <script>
         document.getElementById('copyButton').addEventListener('click', function() {
     var resultContainer = document.getElementById('inputResultContainer');
