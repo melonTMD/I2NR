@@ -2,7 +2,7 @@
 
 使用数字来传输你的静态图像！
 
-[直接链接到网站](https://melontmd.github.io/I2NR/)
+[直接链接到网页](https://melontmd.github.io/I2NR/)
 ## 信息
 ###### 作者：melonTMD
 ###### 许可证：MIT
